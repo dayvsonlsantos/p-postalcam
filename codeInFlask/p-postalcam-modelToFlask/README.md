@@ -47,3 +47,7 @@ Abra o arquivo testModel.py, e em image_path, coloque o endereço da imagem que 
  </tr>
    
 </table>
+
+## ![link](https://github.com/dayvsonlsantos/p-mostra-dados/assets/102249811/16d7c222-81dd-46e5-bb01-94eb7057d0f3) Licença
+
+O projeto se encontra sob a licença [GPLv3](https://github.com/dayvsonlsantos/p-postalcam/blob/feature/LICENSE).
