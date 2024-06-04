@@ -7,6 +7,7 @@
  <a href="#Sobre">Sobre</a> •
  <a href="#Dayvson-Lima">Dayvson Lima</a> •
  <a href="#Daniel-Oliveira">Daniel Oliveira</a> • 
+ <a href="#-Licença">Licença</a>
 </p>
 
 ## ![link](https://github.com/dayvsonlsantos/p-mostra-dados/assets/102249811/6487f089-0953-418f-b661-4ba593e08c4c)  Sobre
@@ -45,3 +46,7 @@
 <br/>
 <br/>
 <br/>
+
+## ![link](https://github.com/dayvsonlsantos/p-mostra-dados/assets/102249811/16d7c222-81dd-46e5-bb01-94eb7057d0f3) Licença
+
+O projeto se encontra sob a licença [GPLv3](https://github.com/dayvsonlsantos/p-postalcam/blob/feature/LICENSE).
