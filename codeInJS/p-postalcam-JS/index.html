@@ -21,7 +21,7 @@
             <h2 class="mb-4 text-xl font-semibold text-purple-600 text-center w-100">Log de Detecções</h2>
             <section class="overflow-auto w-full w-3/4 flex items-center justify-start flex-col text-center h-4/5">
                 <!-- Log container content will be dynamically added here -->
-                <section id="log-container" class="rounded-2xl flex items-center justify-center text-center p-2 font-semibold"></section>
+                <section id="log-container" class="rounded-2xl flex items-center justify-center flex-col text-center p-2 font-semibold"></section>
             </section>
         </section>
     </section>
@@ -92,7 +92,7 @@
         // Function to add a message and image to the log
         function addToLog(message, imageDataUrl) {
             const logEntry = document.createElement("div");
-            logEntry.className = "flex items-center justify-center";
+            logEntry.className = "flex items-center justify-center my-4";
 
             // Create image element
             const img = document.createElement("img");
