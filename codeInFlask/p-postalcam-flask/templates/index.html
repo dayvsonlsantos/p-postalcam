@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vídeo ao Vivo e Log de Previsões</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="overflow-hidden">
+    <h1 class="font-semibold text-center text-2xl py-6 md:py-10 text-purple-600">Detectando Encomendas</h1>
+    <section class="flex items-center justify-center w-screen md:gap-8 flex-col h-screen md:flex-row box-border ">
+        <section class="w-100 md:w-3/5 flex items-center justify-start flex-col md:h-screen lg:w-full max-w-screen-md box-border">
+            <section class="box-border p-3 md:p-5 bg-purple-100 rounded-3xl w-100 mx-5 lg:w-full lg:max-w-screen-lg">
+                <h2 class="mb-4 font-semibold text-purple-600 text-center">Câmera ao vivo</h2>
+                <img src="{{ url_for('video_feed') }}" class="rounded-3xl w-100 lg:w-full">
+                <!-- <img src="\img.png" alt="" class="rounded-3xl w-100 lg:w-full"> -->
+            </section>
+        </section>
+        <section class="flex items-center justify-start text-justify flex-col w-100 md:w-2/5 h-2/3 md:h-screen mt-7 md:mt-0">
+            <h2 class="mb-4 text-xl font-semibold text-purple-600 text-center w-100">Log de Previsões</h2>
+            <section class="overflow-auto w-full text-center h-4/5 rounded-3xl">
+                <ul id="predictions" class="mb-3"></ul>
+            </section>
+            <script>
+                function updatePredictions(predictions) {
+                    var predictionsList = document.getElementById('predictions');
+                    predictionsList.innerHTML = '';
+                    predictions.forEach(function(prediction) {
+                        var listItem = document.createElement('li');
+                        listItem.textContent = prediction[0] + ' - ' + prediction[1];
+                        predictionsList.appendChild(listItem);
+                    });
+                }
+                var source = new EventSource('/predictions_stream');
+                source.onmessage = function(event) {
+                    var predictions = JSON.parse(event.data);
+                    updatePredictions(predictions);
+                };
+            </script>
+        </section>
+    </section>
+</body>
+</html>

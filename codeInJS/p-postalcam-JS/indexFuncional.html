@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="overflow-hidden" onload="init()">
+    <h1 class="font-semibold text-center text-2xl py-6 md:py-10 text-purple-600">Detectando Encomendas</h1>
+    <section class="flex items-center justify-center w-screen md:gap-8 flex-col h-screen md:flex-row box-border ">
+        <section class="w-100 md:w-3/5 flex items-center justify-start flex-col md:h-screen lg:w-full max-w-screen-md box-border">
+            <section class="box-border p-3 md:p-5 bg-purple-100 rounded-3xl w-100 mx-5 lg:w-full lg:max-w-screen-lg">
+                <h2 class="mb-4 font-semibold text-purple-600 text-center">Câmera ao vivo</h2>
+                <div id="webcam-container" class="rounded-3xl w-100 lg:w-full"> </div>
+                <!-- <img src="\img.png" alt="" class="rounded-3xl w-100 lg:w-full"> -->
+            </section>
+        </section>
+        <section class="flex items-center justify-start text-justify flex-col w-100 md:w-2/5 h-2/3 md:h-screen mt-7 md:mt-0">
+            <h2 class="mb-4 text-xl font-semibold text-purple-600 text-center w-100">Log de Previsões</h2>
+            <section class="overflow-auto w-full text-center h-4/5 rounded-3xl" id="log-container">
+                <!-- Log container content will be dynamically added here -->
+            </section>
+        </section>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    <script type="text/javascript">
+        // the link to your model provided by Teachable Machine export panel
+        const URL = "./my_model/";
+
+        let model, webcam, logContainer, maxPredictions;
+
+        // Load the image model and setup the webcam
+        async function init() {
+            const modelURL = URL + "model.json";
+            const metadataURL = URL + "metadata.json";
+
+            // load the model and metadata
+            model = await tmImage.load(modelURL, metadataURL);
+            maxPredictions = model.getTotalClasses();
+
+            // Convenience function to setup a webcam
+            const flip = true; // whether to flip the webcam
+            webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
+            await webcam.setup(); // request access to the webcam
+            await webcam.play();
+            window.requestAnimationFrame(loop);
+
+            // append elements to the DOM
+            document.getElementById("webcam-container").appendChild(webcam.canvas);
+            logContainer = document.getElementById("log-container");
+
+            // Start the prediction loop
+            predictLoop();
+        }
+
+        // Run the prediction loop recursively every 5 seconds
+        async function predictLoop() {
+            await predict(); // Predict
+            setTimeout(predictLoop, 5000); // Schedule next prediction after 5 seconds
+        }
+
+        // Run the webcam image through the image model
+        async function predict() {
+            webcam.update(); // Update the webcam frame
+            // predict can take in an image, video, or canvas HTML element
+            const prediction = await model.predict(webcam.canvas);
+
+            // Check if the prediction is for "Pessoas_e_Pacotes" with a probability above 60%
+            const classPrediction = prediction.find(pred => pred.className === 'Pessoas_e_Pacotes' && pred.probability > 0.6);
+            if (classPrediction) {
+                // Show message if "Pessoas_e_Pacotes" with probability above 60% is detected
+                const logMessage = `Possível encomenda detectada em ${getCurrentDateTime()}`;
+                addToLog(logMessage);
+            }
+        }
+
+        // Function to get current date and time
+        function getCurrentDateTime() {
+            const now = new Date();
+            const date = now.toLocaleDateString();
+            const time = now.toLocaleTimeString();
+            return `${date} ${time}`;
+        }
+
+        // Function to add a message to the log
+        function addToLog(message) {
+            const logEntry = document.createElement("p");
+            logEntry.textContent = message;
+
+            // Add the new log entry to the top of the log container
+            logContainer.insertBefore(logEntry, logContainer.firstChild);
+        }
+
+        // Function to continuously update webcam feed
+        function loop() {
+            webcam.update(); // Update the webcam frame
+            window.requestAnimationFrame(loop); // Continue the loop
+        }
+    </script>
+</body>
+</html>
